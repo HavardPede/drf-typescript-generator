@@ -131,7 +131,7 @@ def _get_typescript_type(field, field_name, serializer_instance):
         # composite type array needs to be in parenthesis e.g. (number | null)[]
         typescript_type = f'({typescript_type})'
 
-    return typescript_type + ('[]' if is_list else '')
+    return _remove_serializer_string(typescript_type) + ('[]' if is_list else '')
 
 
 def get_nested_serializers(serializer):
