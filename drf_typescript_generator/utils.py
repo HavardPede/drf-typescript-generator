@@ -9,6 +9,7 @@ from drf_typescript_generator.globals import (
     CHOICES_TRANSFORM_FUNCTIONS_BY_TYPE, DEFAULT_TYPE, MAPPING, SPECIAL_FIELD_TYPES
 )
 
+
 def _is_api_view(member):
     """ Returns whether the `member` is drf api view """
     return inspect.isclass(member) and views.APIView in inspect.getmro(member)
@@ -22,6 +23,10 @@ def _is_serializer_class(member):
 def _to_camelcase(s):
     parts = s.split('_')
     return parts[0] + ''.join([part.capitalize() for part in parts[1:]])
+
+
+def _remove_serializer_string(s):
+    return s.replace("Serializer", "")
 
 
 def _check_for_nullable(field, typescript_type):
@@ -41,7 +46,8 @@ def _get_typescript_name(field, field_name, options={}):
         typescript_field_name = _to_camelcase(field_name)
     if not field.read_only and not field.required:
         typescript_field_name += '?'
-    return typescript_field_name
+
+    return _remove_serializer_string(typescript_field_name)
 
 
 def _get_method_return_value_type(field, field_name, serializer_instance):
@@ -61,6 +67,7 @@ def _get_choice_selection_fields_type(field):
     by enumerating its choices. Also takes into account the
     allow_blank argument.
     """
+
     def transform_choice(v):
         return str(CHOICES_TRANSFORM_FUNCTIONS_BY_TYPE[type(v)](v))
 
