@@ -47,7 +47,7 @@ def _get_typescript_name(field, field_name, options={}):
     if not field.read_only and not field.required:
         typescript_field_name += '?'
 
-    return _remove_serializer_string(typescript_field_name)
+    return typescript_field_name
 
 
 def _get_method_return_value_type(field, field_name, serializer_instance):
@@ -208,4 +208,4 @@ def export_serializer(serializer_name, fields, options):
     else:
         template = 'export interface {} {{\n{}\n}}\n\n'
 
-    return template.format(serializer_name, attributes)
+    return template.format(_remove_serializer_string(serializer_name), attributes)
